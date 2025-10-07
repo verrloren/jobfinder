@@ -21,13 +21,13 @@ declare module 'telegram' {
   }
 }
 
-declare module 'telegram/events' {
+declare module 'telegram/events/index.js' {
   export class NewMessage {
     constructor(options?: any);
   }
 }
 
-declare module 'telegram/sessions' {
+declare module 'telegram/sessions/index.js' {
   export class StringSession {
     constructor(session: string);
   }

@@ -1,8 +1,8 @@
 import { EventEmitter } from 'node:events';
 import Bottleneck from 'bottleneck';
 import { Api, TelegramClient } from 'telegram';
-import { NewMessage } from 'telegram/events';
-import { StringSession } from 'telegram/sessions';
+import { NewMessage } from 'telegram/events/index.js';
+import { StringSession } from 'telegram/sessions/index.js';
 import type { Logger } from '../logging/logger.js';
 import {
   NewMessageHandler,
@@ -43,8 +43,12 @@ export class GramJsUserbotService implements UserbotService {
       return;
     }
 
-    const session = new StringSession(this.config.session);
-    this.client = new TelegramClient(session, this.config.apiId, this.config.apiHash, {
+    const apiId = this.resolveApiId();
+    const apiHash = this.resolveEnv('API_HASH');
+    const sessionString = this.resolveEnv('USERBOT_SESSION');
+1
+    const session = new StringSession(sessionString);
+    this.client = new TelegramClient(session, apiId, apiHash, {
       connectionRetries: 5,
     });
 
@@ -56,6 +60,32 @@ export class GramJsUserbotService implements UserbotService {
 
     this.client.addEventHandler(this.newMessageHandler, new NewMessage({ incoming: true }));
     this.logger?.info?.('GramJS userbot monitoring started');
+  }
+
+  private resolveEnv(name: 'API_HASH' | 'USERBOT_SESSION'): string {
+    const value = process.env[name];
+
+    if (!value) {
+      throw new Error(`Environment variable ${name} must be defined to start the userbot`);
+    }
+
+    return value;
+  }
+
+  private resolveApiId(): number {
+    const apiId = process.env.API_ID;
+
+    if (!apiId) {
+      throw new Error('Environment variable API_ID must be defined to start the userbot');
+    }
+
+    const parsed = Number(apiId);
+
+    if (!Number.isInteger(parsed)) {
+      throw new Error('Environment variable API_ID must be an integer value');
+    }
+
+    return parsed;
   }
 
   async stopMonitoring(): Promise<void> {
