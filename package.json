@@ -1,0 +1,32 @@
+{
+  "name": "autoapply_tg_bot",
+  "version": "0.1.0",
+  "description": "Telegram job parser bot with userbot and Telegraf components",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "clean": "rm -rf dist",
+    "dev": "TS_NODE_PROJECT=tsconfig.json TS_NODE_TRANSPILE_ONLY=1 node --loader ts-node/esm --no-warnings src/main.ts",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^9.4.5",
+    "bottleneck": "^2.19.5",
+    "dotenv": "^17.2.3",
+    "node-cron": "^3.0.3",
+    "telegraf": "^4.15.3",
+    "telegram": "^2.18.11"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}
